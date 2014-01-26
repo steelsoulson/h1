@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.gamedev2dstarter"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-sdk
+        android:minSdkVersion="3"
+        android:targetSdkVersion="8" />
+
+    <application
+        android:debuggable="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.gamedev2dstarter.GLBasicsStarter"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.gamedev2dstarter.CannonTest"
+            android:label="@string/title_activity_canon_test"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.example.gamedev2dstarter.CannonGravityTest"
+            android:label="@string/title_activity_canon_gravity_test"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.example.gamedev2dstarter.CollisionTest"
+            android:label="@string/title_activity_collision_test"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.example.gamedev2dstarter.Camera2DTest"
+            android:label="@string/title_activity_camera2_dtest"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.example.gamedev2dstarter.TextureAtlasTest"
+            android:label="@string/title_activity_texture_atlas_test"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.example.gamedev2dstarter.SpriteBatcherTest"
+            android:label="@string/title_activity_sprite_batcher_test"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.example.gamedev2dstarter.AnimationScreenTest"
+            android:label="@string/title_activity_animation_screen_test"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name="com.example.gamedev2dstarter.TanksScreenTest"
+            android:label="@string/title_activity_tanks_screen_test"
+            android:screenOrientation="landscape" >
+        </activity>
+    </application>
+
+</manifest>
