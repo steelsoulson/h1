@@ -1,7 +1,5 @@
 package com.example.gamedev2dstarter;
 
-import com.example.androidgames.framework.math.OverlapTester;
-import com.example.androidgames.framework.math.Rectangle;
 import com.example.androidgames.framework.math.Vector2;
 import com.example.androidgames.gamedev2d.BaseTank;
 
@@ -16,14 +14,14 @@ public class World {
 	
 	public void update(float deltaTime) {
 		tank.update(deltaTime);
-		float closestDistance = deltaTime * tank.getSpeed();
-		if (OverlapTester.overlapRectangles(
-				new Rectangle(	tank.position.x - closestDistance, tank.position.y - closestDistance, 
-								2 * closestDistance, 2 * closestDistance	), 
-				new Rectangle(	tank.direction.x - closestDistance, tank.direction.y - closestDistance, 
-						2 * closestDistance, 2* closestDistance))) {
-			tank.stop();
-		}
+//		float closestDistance = deltaTime * tank.getSpeed();
+//		if (OverlapTester.overlapRectangles(
+//				new Rectangle(	tank.position.x - closestDistance, tank.position.y - closestDistance, 
+//								2 * closestDistance, 2 * closestDistance	), 
+//				new Rectangle(	tank.direction.x - closestDistance, tank.direction.y - closestDistance, 
+//						2 * closestDistance, 2* closestDistance))) {
+//			tank.stop();
+//		}
 	}
 	
 	public float updateCameraPositionX(float FRUSTRUM_WIDTH) {

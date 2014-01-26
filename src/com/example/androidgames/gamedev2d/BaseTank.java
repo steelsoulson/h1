@@ -1,10 +1,10 @@
 package com.example.androidgames.gamedev2d;
 
 import android.util.FloatMath;
-import com.example.androidgames.framework.math.Vector2;
+//import com.example.androidgames.framework.math.Vector2;
 
-public class BaseTank extends DynamicGameObject {
-	public final Vector2 direction;
+public class BaseTank extends DynamicGameObject implements IDirectionListener {
+	//public final Vector2 direction;
 	public float targetAngle = 0; 
 	protected float tankSpeed = 2.0f;
 	protected float towerSpeed = 50.0f;
@@ -13,7 +13,7 @@ public class BaseTank extends DynamicGameObject {
 	public BaseTank(float x, float y, float width, float height) {
 		super(x, y, width, height);
 		
-		direction = new Vector2(x, y);
+//		direction = new Vector2(x, y);
 	}
 	
 	public float getCurrentAngle() {
@@ -32,19 +32,28 @@ public class BaseTank extends DynamicGameObject {
 		this.velocity.set(0, 0);
 	}
 	
-	public void setDirection(Vector2 direction) {
+	@Override
+	public void stopMovement() {
+		this.velocity.set(0, 0);
+	}
+	
+	@Override
+	public void updateDirection(float angle) {
+		this.setDirectionAngle(angle);
+	}
+	
+	public void setDirectionAngle(float newAngle) {
 		this.velocity.set(this.tankSpeed, 0);
-		this.direction.set(direction);
-		targetAngle = direction.sub(position).angle();
+		targetAngle = newAngle;
 		velocity.set(velocity.rotate(targetAngle));
 	}
 	
-	public void setDirection(float x, float y) {
-		this.velocity.set(this.tankSpeed, 0);
-		this.direction.set(x, y);
-		targetAngle = this.direction.sub(position).angle();
-		velocity.set(velocity.rotate(targetAngle));
-	}
+//	public void setDirection(float x, float y) {
+//		this.velocity.set(this.tankSpeed, 0);
+//		this.direction.set(x, y);
+//		targetAngle = this.direction.sub(position).angle();
+//		velocity.set(velocity.rotate(targetAngle));
+//	}
 	
 	public void update(float deltaTime) {	
 		if (Math.abs(currentAngle - targetAngle) > 180.0f) {
