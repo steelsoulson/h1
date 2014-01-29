@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.text.StaticLayout;
+
 import com.example.androidgames.framework.Game;
 import com.example.androidgames.framework.Input.TouchEvent;
 import com.example.androidgames.framework.Screen;
@@ -12,6 +14,9 @@ import com.example.androidgames.framework.gl.Texture;
 import com.example.androidgames.framework.gl.TextureRegion;
 import com.example.androidgames.framework.impl.GLGame;
 import com.example.androidgames.framework.impl.GLGraphics;
+import com.example.androidgames.framework.math.Rectangle;
+import com.example.androidgames.framework.math.Vector2;
+import com.example.androidgames.gamedev2d.GameObject;
 
 public class TanksScreenTest extends GLGame {
 	public Screen getStartScreen() {
@@ -26,6 +31,8 @@ public class TanksScreenTest extends GLGame {
 		TextureRegion tankRegion;
 		TextureRegion groundRegion;
 		TextureRegion controllerRegion;
+		TextureRegion leavesRegion;
+		TextureRegion boundRegion;
 		SpriteBatcher batcher;
 		Texture texture;
 		
@@ -33,7 +40,7 @@ public class TanksScreenTest extends GLGame {
 			super(game);
 			glGraphics = ((GLGame)game ).getGLGraphics();
 			tanksWorld = new World(glGraphics, FRUSTRUM_WIDTH, FRUSTRUM_HEIGHT);
-			batcher = new SpriteBatcher(glGraphics, 200);
+			batcher = new SpriteBatcher(glGraphics, 2000);
 		}
 
 		@Override
@@ -49,29 +56,44 @@ public class TanksScreenTest extends GLGame {
 			GL10 gl = glGraphics.getGL();
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 			
-			tanksWorld.present(deltaTime);
-			
 			gl.glEnable(GL10.GL_BLEND);
 			gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 			gl.glEnable(GL10.GL_TEXTURE_2D);
 			
 			gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			
+			tanksWorld.setViewportAndMatrices();
+			
 			batcher.beginBatch(texture);
 			
-			int numSpritesX =  (int) (FRUSTRUM_WIDTH / 2.0f + 2.0f);
-			int numSpritesY =  (int) (FRUSTRUM_HEIGHT / 2.0f + 2.0f);
 			float lowestX = (int)((tanksWorld.camera.position.x - FRUSTRUM_WIDTH/2.0f)/2.0f) * 2;
 			float lowestY = (int)((tanksWorld.camera.position.y - FRUSTRUM_HEIGHT/2.0f)/2.0f) * 2;
+			float widthToDraw = FRUSTRUM_WIDTH - lowestX;
+			float heightToDraw = FRUSTRUM_HEIGHT - lowestY;
+			List<GameObject> toDraw = tanksWorld.getDrawableObjects(new Rectangle(lowestX, lowestY, widthToDraw, heightToDraw));
+			
+//			int numSpritesX =  (int) (FRUSTRUM_WIDTH / 2.0f + 2.0f);
+//			int numSpritesY =  (int) (FRUSTRUM_HEIGHT / 2.0f + 2.0f);
 
-			for (int i = 0; i < numSpritesY; i++)
-				for (int j = 0; j < numSpritesX; j++)
-				{
-					batcher.drawSprite(lowestX + 1.0f + 2.0f*j, lowestY + 1.0f + 2.0f*i, 
-							2.0f, 2.0f, groundRegion);
-				}
+			for (GameObject gameObject : toDraw) {
+				batcher.drawSprite(gameObject.position.x, gameObject.position.y, 
+						gameObject.bounds.width, gameObject.bounds.height, getRegionToDraw(gameObject));
+				
+			} 			
+
+//			for (int i = 0; i < numSpritesY; i++)
+//				for (int j = 0; j < numSpritesX; j++)
+//				{
+//					/// Draw only sprite that is visible at the moment
+//					batcher.drawSprite(lowestX + 1.0f + 2.0f*j, lowestY + 1.0f + 2.0f*i, 
+//							2.0f, 2.0f, groundRegion);
+//				}
 			batcher.drawSprite(tanksWorld.tank.position.x, tanksWorld.tank.position.y, 2.0f, 2.0f, 
 					tanksWorld.tank.getCurrentAngle(), tankRegion);
+			
+			for (BoundWall bw: tanksWorld.bounds) {
+				batcher.drawSprite(bw.position.x, bw.position.y, bw.bounds.width, bw.bounds.height, boundRegion);
+			}
 			
 			batcher.endBatch();
 			
@@ -89,6 +111,10 @@ public class TanksScreenTest extends GLGame {
 			
 			tanksWorld.inputController.updateFade(deltaTime);
 		}
+		
+		private TextureRegion getRegionToDraw(GameObject object) {
+			return null;
+		}
 
 		@Override
 		public void pause() {
@@ -97,10 +123,12 @@ public class TanksScreenTest extends GLGame {
 
 		@Override
 		public void resume() {
-			texture = new Texture((GLGame) game, "TanksAtlas.png");
+			texture = new Texture((GLGame) game, "TanksAtlasNew.png");
 			tankRegion = new TextureRegion(texture, 32, 0, 32, 32);
 			groundRegion = new TextureRegion(texture, 0, 0, 32, 32);
-			controllerRegion = new TextureRegion(texture, 0, 32, 32, 32);
+			controllerRegion = new TextureRegion(texture, 96, 0, 32, 32);
+			leavesRegion = new TextureRegion(texture, 64, 0, 32, 32);
+			boundRegion = new TextureRegion(texture, 32, 32, 16, 16);
 		}
 
 		@Override
