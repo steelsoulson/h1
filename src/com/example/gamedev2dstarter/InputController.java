@@ -3,8 +3,6 @@ package com.example.gamedev2dstarter;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-
 import com.example.androidgames.framework.Input.TouchEvent;
 import com.example.androidgames.framework.gl.Camera2D;
 import com.example.androidgames.framework.impl.GLGraphics;
@@ -26,8 +24,8 @@ public class InputController {
 	float MovementCtrlInnerRadius;
 	float MovementCtrlOuterRadius;
 	Rectangle ActionFieldArea;
-	final float MinControllerAlpha = 0.1f;
-	final float MaxControllerAlpha = 0.4f;
+	final float MinControllerAlpha = 0.3f;
+	final float MaxControllerAlpha = 0.7f;
 	float ControllerAlpha = MinControllerAlpha;
 	float AlphaStep = 1.0f;
 	GLGraphics glGraphics;
@@ -64,8 +62,8 @@ public class InputController {
 			camera.touchWorld(touchPos.set(touchEvent.x, touchEvent.y));
 		
 			Circle touchArea = new Circle(touchPos.x - camera.position.x, touchPos.y - camera.position.y, MovementCtrlInnerRadius/10.0f);
-			Log.d("InputController", "touchArea [" + touchArea.center.x + " : " + touchArea.center.y + "]");
-			Log.d("InputController", "ControllerArea [" + ControllerArea.center.x + " : " + ControllerArea.center.y + "]");
+//			Log.d("InputController", "touchArea [" + touchArea.center.x + " : " + touchArea.center.y + "]");
+//			Log.d("InputController", "ControllerArea [" + ControllerArea.center.x + " : " + ControllerArea.center.y + "]");
 			if (OverlapTester.overlapCircles(touchArea, stopButtonArea)) {
 				ControllerAlpha = MaxControllerAlpha;
 				for (IDirectionListener listener: listeners) {
@@ -77,7 +75,7 @@ public class InputController {
 				/// calculate the angle between controller center and finger position 
 				Vector2 vec = new Vector2(touchArea.center.x, touchArea.center.y);
 				float angle = vec.sub(this.ControllerArea.center.x, this.ControllerArea.center.y).angle();
-				Log.d("InputController", "The calculated angle is: [" + angle + "]");
+				//Log.d("InputController", "The calculated angle is: [" + angle + "]");
 				for (IDirectionListener listener : listeners) {
 					listener.updateDirection(angle);
 				}
