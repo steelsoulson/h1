@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import android.util.Log;
+
 import com.example.androidgames.framework.Input.TouchEvent;
 import com.example.androidgames.framework.gl.Camera2D;
 import com.example.androidgames.framework.gl.SpatialHashGrid;
 import com.example.androidgames.framework.gl.Texture;
 import com.example.androidgames.framework.gl.TextureRegion;
 import com.example.androidgames.framework.impl.GLGraphics;
-import com.example.androidgames.framework.math.Circle;
 import com.example.androidgames.framework.math.OverlapTester;
 import com.example.androidgames.framework.math.Rectangle;
 import com.example.androidgames.framework.math.Vector2;
@@ -46,15 +47,16 @@ public class World {
 					1.25f, new Rectangle(0, 0, 0, 0));
 		this.inputController.addListener(tank);
 		
-		/// Assumption: max cell size is 2.0 x 2.0
-		hashGrid = new SpatialHashGrid(worldHi.x, worldHi.y, 2.0f);
+		/// Assumption: max cell size is 3.0 x 3.0
+		hashGrid = new SpatialHashGrid(worldHi.x, worldHi.y, 3.0f);
 	}
+	
 	
 	public void update(List<TouchEvent> touchEvents, float deltaTime) {
 		inputController.update(touchEvents, deltaTime, camera);
-		List<GameObject>potentialColliders = hashGrid.getPotentialColliders(tank);
-		Circle tankBound = new Circle(tank.position.x, 
-				tank.position.y, tank.bounds.width);
+		tank.checkNewPosition(deltaTime);
+		List<GameObject>potentialColliders = hashGrid.getPotentialColliders(tank.maxBound.bound);
+		
 		Rectangle objBound = new Rectangle(0, 0, 0, 0);
 		for (GameObject gameObject : potentialColliders) {
 			objBound.lowerLeft.set(gameObject.position.x - gameObject.bounds.width/2.0f,
@@ -62,8 +64,9 @@ public class World {
 			objBound.width = gameObject.bounds.width;
 			objBound.height = gameObject.bounds.height;
 			
-			if (OverlapTester.overlapCircleRectangle(tankBound, objBound)) {
+			if (OverlapTester.overlapRectangles(tank.maxBound.bound, objBound)) {
 				tank.stop();
+				Log.d("World", "Bounds are overlaps");
 				break;
 			}
 		}
@@ -126,7 +129,7 @@ public class World {
 		for (GameObject gameObject : allObjects) {
 			if (gameObject.bounds.lowerLeft.x < area.lowerLeft.x + area.width && 
 				gameObject.bounds.lowerLeft.x + gameObject.bounds.width > area.lowerLeft.x &&
-				gameObject.bounds.lowerLeft.y < area.lowerLeft.y + area.height&&
+				gameObject.bounds.lowerLeft.y < area.lowerLeft.y + area.height &&
 				gameObject.bounds.lowerLeft.y + gameObject.bounds.height > area.lowerLeft.y)
 				
 				objects.add(gameObject);
