@@ -11,6 +11,9 @@ public class BaseTank extends DynamicGameObject implements IDirectionListener {
 	protected float towerSpeed = 50.0f;
 	protected float currentAngle = 0;
 	public final Rectangle4 maxBound;
+	
+	private float lastCurrentAngle = 0;
+	private final Vector2 lastPosition = new Vector2(); 
 
 	public BaseTank(float x, float y, float width, float height) {
 		super(x, y, width, height);
@@ -50,15 +53,20 @@ public class BaseTank extends DynamicGameObject implements IDirectionListener {
 		velocity.set(velocity.rotate(targetAngle));
 	}
 	
-	public void checkNewPosition(float deltaTime) {
-		float lastCurrentAngle = currentAngle;
-		Vector2 lastPosition = new Vector2(position);
+	public void reportNewLocation(float deltaTime) {
+		lastPosition.set(this.position);
+		lastCurrentAngle = this.currentAngle;
 		update(deltaTime);
-		currentAngle = lastCurrentAngle;
-		position.set(lastPosition);	
+		//currentAngle = lastCurrentAngle;
+		//position.set(lastPosition);
 	}
 	
-	public void update(float deltaTime) {	
+	public void restoreLastLocation() {
+		this.position.set(lastPosition);
+		this.currentAngle = lastCurrentAngle;
+	}
+	
+	private void update(float deltaTime) {	
 		if (Math.abs(currentAngle - targetAngle) > 180.0f) {
 			if (FloatMath.floor(180.0f - targetAngle + currentAngle) < 0)
 				currentAngle -= towerSpeed * deltaTime;

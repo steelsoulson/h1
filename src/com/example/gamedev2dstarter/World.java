@@ -12,6 +12,7 @@ import com.example.androidgames.framework.gl.SpatialHashGrid;
 import com.example.androidgames.framework.gl.Texture;
 import com.example.androidgames.framework.gl.TextureRegion;
 import com.example.androidgames.framework.impl.GLGraphics;
+import com.example.androidgames.framework.math.Circle;
 import com.example.androidgames.framework.math.OverlapTester;
 import com.example.androidgames.framework.math.Rectangle;
 import com.example.androidgames.framework.math.Vector2;
@@ -54,9 +55,9 @@ public class World {
 	
 	public void update(List<TouchEvent> touchEvents, float deltaTime) {
 		inputController.update(touchEvents, deltaTime, camera);
-		tank.checkNewPosition(deltaTime);
+		tank.reportNewLocation(deltaTime);
 		List<GameObject>potentialColliders = hashGrid.getPotentialColliders(tank.maxBound.bound);
-		
+		Circle tankCircleBound = new Circle(tank.position.x, tank.position.y, tank.bounds.width/1.6f);
 		Rectangle objBound = new Rectangle(0, 0, 0, 0);
 		for (GameObject gameObject : potentialColliders) {
 			objBound.lowerLeft.set(gameObject.position.x - gameObject.bounds.width/2.0f,
@@ -64,13 +65,13 @@ public class World {
 			objBound.width = gameObject.bounds.width;
 			objBound.height = gameObject.bounds.height;
 			
-			if (OverlapTester.overlapRectangles(tank.maxBound.bound, objBound)) {
+			if (OverlapTester.overlapCircleRectangle(tankCircleBound, objBound)) {
+				tank.restoreLastLocation();
 				tank.stop();
-				Log.d("World", "Bounds are overlaps");
+				Log.d("World", "Tank can't move more.");
 				break;
 			}
 		}
-		tank.update(deltaTime);
 	}
 	
 	public void updateRegions(Texture texture) {

@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
-
 import com.example.androidgames.framework.Game;
 import com.example.androidgames.framework.Input.TouchEvent;
 import com.example.androidgames.framework.Screen;
@@ -67,8 +65,6 @@ public class TanksScreenTest extends GLGame {
 			float heightToDraw = FRUSTRUM_HEIGHT;
 			List<GameObject> toDraw = tanksWorld.getDrawableObjects(new Rectangle(lowestX, 
 					lowestY, widthToDraw, heightToDraw));
-			
-			Log.d("TanksScreenTest", "There are " + toDraw.size() + " objects to draw");
 
 			for (GameObject gameObject : toDraw) {
 				batcher.drawSprite(gameObject.position.x, gameObject.position.y, 
